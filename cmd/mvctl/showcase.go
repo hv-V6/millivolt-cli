@@ -6,6 +6,10 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/subtle"
+	"encoding/hex"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -331,23 +335,58 @@ func cmdDashboard(ctx Context) (Result, error) {
 		}
 	}
 	addr := fmt.Sprintf("127.0.0.1:%d", port)
-	url := "http://" + addr + "/"
+	// The Host header is NOT an auth boundary: any local process can set it.
+	// Generate a one-time secret, exchange it for an HttpOnly cookie on the
+	// browser's first navigation, and require that cookie on every later
+	// request (including same-origin dashboard assets and API calls).
+	secret, err := dashboardNonce()
+	if err != nil {
+		return Result{Code: 1}, err
+	}
+	url := "http://" + addr + "/?mvctl=" + secret
 	if flag(ctx, "print", "") == "true" || ctx.G.JSON {
-		return Result{Pretty: url, Data: map[string]any{"url": url, "port": port}}, nil
+		return Result{Pretty: url, Data: map[string]any{"url": url, "port": port, "one_time_secret": true}}, nil
 	}
 	if ctx.G.Token == "" {
 		return Result{Code: 1}, fmt.Errorf("operator token is not configured; set MILLIVOLT_OPERATOR_TOKEN or --token")
 	}
-	target, err := http.NewRequest(http.MethodGet, ctx.G.BaseURL, nil)
+	handler, err := dashboardHandler(addr, port, secret, ctx.G.Token, ctx.G.BaseURL)
 	if err != nil {
 		return Result{Code: 1}, err
+	}
+	srv := &http.Server{Addr: addr, Handler: handler, ReadHeaderTimeout: 5 * time.Second}
+	listenErr := make(chan error, 1)
+	go func() { listenErr <- srv.ListenAndServe() }()
+	// Wait briefly for the listener so a busy port is reported, not ignored.
+	select {
+	case err := <-listenErr:
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
+			return Result{Code: 1}, fmt.Errorf("dashboard proxy failed to listen on %s: %w", addr, err)
+		}
+	case <-time.After(250 * time.Millisecond):
+	}
+	openBrowser(url)
+	fmt.Fprintln(os.Stderr, dim("dashboard proxy on "+url+" (Ctrl-C to stop)"))
+	<-ctx.Ctx.Done()
+	shutdown, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	_ = srv.Shutdown(shutdown)
+	return Result{Pretty: dim("dashboard closed"), Data: map[string]any{"closed": true}}, nil
+}
+
+// dashboardHandler builds the guarded loopback proxy. It is a separate
+// function so the auth gate can be exercised without launching a browser.
+func dashboardHandler(addr string, port int, secret, token, baseURL string) (http.Handler, error) {
+	target, err := http.NewRequest(http.MethodGet, baseURL, nil)
+	if err != nil {
+		return nil, err
 	}
 	proxy := &httputil.ReverseProxy{
 		Director: func(req *http.Request) {
 			req.URL.Scheme = target.URL.Scheme
 			req.URL.Host = target.URL.Host
 			req.Host = target.URL.Host
-			req.Header.Set("Authorization", "Bearer "+ctx.G.Token)
+			req.Header.Set("Authorization", "Bearer "+token)
 			req.Header.Del("Origin")
 			req.Header.Del("Referer")
 		},
@@ -358,21 +397,36 @@ func cmdDashboard(ctx Context) (Result, error) {
 			return nil
 		},
 	}
-	srv := &http.Server{Addr: addr, Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	const cookieName = "mvctl_dashboard"
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Host != addr && r.Host != "localhost:"+strconv.Itoa(port) {
 			http.Error(w, "forbidden host", http.StatusForbidden)
 			return
 		}
+		if subtle.ConstantTimeCompare([]byte(r.URL.Query().Get("mvctl")), []byte(secret)) == 1 {
+			http.SetCookie(w, &http.Cookie{
+				Name: cookieName, Value: secret, Path: "/",
+				HttpOnly: true, SameSite: http.SameSiteStrictMode, MaxAge: 12 * 3600,
+			})
+			// Drop the secret from the address bar before serving the page.
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+		}
+		cookie, cookieErr := r.Cookie(cookieName)
+		if cookieErr != nil || subtle.ConstantTimeCompare([]byte(cookie.Value), []byte(secret)) != 1 {
+			http.Error(w, "forbidden: open the URL printed by mvctl dashboard", http.StatusForbidden)
+			return
+		}
 		proxy.ServeHTTP(w, r)
-	})}
-	go func() { _ = srv.ListenAndServe() }()
-	openBrowser(url)
-	fmt.Fprintln(os.Stderr, dim("dashboard proxy on "+url+" (Ctrl-C to stop)"))
-	<-ctx.Ctx.Done()
-	shutdown, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-	_ = srv.Shutdown(shutdown)
-	return Result{Pretty: dim("dashboard closed"), Data: map[string]any{"closed": true}}, nil
+	}), nil
+}
+
+func dashboardNonce() (string, error) {
+	b := make([]byte, 24)
+	if _, err := rand.Read(b); err != nil {
+		return "", fmt.Errorf("generating dashboard secret: %w", err)
+	}
+	return hex.EncodeToString(b), nil
 }
 
 func openBrowser(url string) {
@@ -385,5 +439,6 @@ func openBrowser(url string) {
 	default:
 		cmd = exec.Command("xdg-open", url)
 	}
-	_ = cmd.Start()
+	// Wait reaps the launcher process instead of leaving a zombie.
+	_ = cmd.Run()
 }

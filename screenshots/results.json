@@ -54,7 +54,7 @@
     "command": "mvctl requests 10",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 1221,
+    "output_bytes": 1056,
     "png": "06-requests.png",
     "note": "durable request log",
     "verified": true
@@ -74,7 +74,7 @@
     "command": "mvctl prometheus",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 1575,
+    "output_bytes": 1574,
     "png": "08-prometheus.png",
     "note": "Prometheus exposition",
     "verified": true
@@ -564,7 +564,7 @@
     "command": "mvctl top --no-tty --theme instrument --mode black",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 6988,
+    "output_bytes": 7040,
     "png": "57-top-live.png",
     "note": "TUI with real data",
     "verified": true
@@ -584,7 +584,7 @@
     "command": "mvctl tour --no-delay",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 6302,
+    "output_bytes": 6137,
     "png": "59-tour.png",
     "note": "scripted walkthrough",
     "verified": true
@@ -594,7 +594,7 @@
     "command": "mvctl dashboard --print",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 23,
+    "output_bytes": 78,
     "png": "60-dashboard-print.png",
     "note": "dashboard proxy URL",
     "verified": true
@@ -614,7 +614,7 @@
     "command": "mvctl bench --requests 4 --concurrency 2 --yes --upstream http://127.0.0.1:1/v1",
     "mode": "fake",
     "exit_code": 0,
-    "output_bytes": 355,
+    "output_bytes": 353,
     "png": "62-bench.png",
     "note": "latency percentiles (fake)",
     "verified": true

@@ -9,9 +9,9 @@ Every command was executed and its real terminal output captured as a PNG. Read-
 | 3 | `mvctl status` | live | 0 | 411 B | [03-status.png](03-status.png) | live health + headline metrics (PASS) |
 | 4 | `mvctl --json status` | live | 0 | 1818 B | [04-status-json.png](04-status-json.png) | scripting output, redacted (PASS) |
 | 5 | `mvctl overview` | live | 0 | 644 B | [05-overview.png](05-overview.png) | full KPI table (PASS) |
-| 6 | `mvctl requests 10` | live | 0 | 1221 B | [06-requests.png](06-requests.png) | durable request log (PASS) |
+| 6 | `mvctl requests 10` | live | 0 | 1056 B | [06-requests.png](06-requests.png) | durable request log (PASS) |
 | 7 | `mvctl query SELECT 1` | live | 0 | 23 B | [07-query.png](07-query.png) | bounded SQL (PASS) |
-| 8 | `mvctl prometheus` | live | 0 | 1575 B | [08-prometheus.png](08-prometheus.png) | Prometheus exposition (PASS) |
+| 8 | `mvctl prometheus` | live | 0 | 1574 B | [08-prometheus.png](08-prometheus.png) | Prometheus exposition (PASS) |
 | 9 | `mvctl watch --samples 3 --interval 1` | live | 0 | 279 B | [09-watch.png](09-watch.png) | live counter sampling (PASS) |
 | 10 | `mvctl url` | live | 0 | 22 B | [10-url.png](10-url.png) | base URL (PASS) |
 | 11 | `mvctl health` | live | 0 | 43 B | [11-health.png](11-health.png) | health gate (PASS) |
@@ -60,12 +60,12 @@ Every command was executed and its real terminal output captured as a PNG. Read-
 | 54 | `mvctl resume` | scratch | 0 | 75 B | [54-resume-preview.png](54-resume-preview.png) | guarded resume preview (PASS) |
 | 55 | `mvctl repair --dir SCRATCH_DIR` | scratch | 0 | 139 B | [55-repair.png](55-repair.png) | diagnose + fix (scratch) (PASS) |
 | 56 | `mvctl serve` | scratch | 1 | 106 B | [56-serve.png](56-serve.png) | supervisor startup (PASS) |
-| 57 | `mvctl top --no-tty --theme instrument --mode black` | live | 0 | 6988 B | [57-top-live.png](57-top-live.png) | TUI with real data (PASS) |
+| 57 | `mvctl top --no-tty --theme instrument --mode black` | live | 0 | 7040 B | [57-top-live.png](57-top-live.png) | TUI with real data (PASS) |
 | 58 | `mvctl top --demo --no-tty --theme midnight --mode black` | local | 0 | 5252 B | [58-top-demo.png](58-top-demo.png) | TUI synthetic feed (PASS) |
-| 59 | `mvctl tour --no-delay` | live | 0 | 6302 B | [59-tour.png](59-tour.png) | scripted walkthrough (PASS) |
-| 60 | `mvctl dashboard --print` | live | 0 | 23 B | [60-dashboard-print.png](60-dashboard-print.png) | dashboard proxy URL (PASS) |
+| 59 | `mvctl tour --no-delay` | live | 0 | 6137 B | [59-tour.png](59-tour.png) | scripted walkthrough (PASS) |
+| 60 | `mvctl dashboard --print` | live | 0 | 78 B | [60-dashboard-print.png](60-dashboard-print.png) | dashboard proxy URL (PASS) |
 | 61 | `mvctl demo --requests 2 --yes --upstream http://127.0.0.1:1/v1` | fake | 0 | 348 B | [61-demo.png](61-demo.png) | showcase traffic (fake) (PASS) |
-| 62 | `mvctl bench --requests 4 --concurrency 2 --yes --upstream http://127.0.0.1:1/v1` | fake | 0 | 355 B | [62-bench.png](62-bench.png) | latency percentiles (fake) (PASS) |
+| 62 | `mvctl bench --requests 4 --concurrency 2 --yes --upstream http://127.0.0.1:1/v1` | fake | 0 | 353 B | [62-bench.png](62-bench.png) | latency percentiles (fake) (PASS) |
 | 63 | `mvctl chat hello from mvctl --upstream http://127.0.0.1:1/v1` | fake | 0 | 44 B | [63-chat.png](63-chat.png) | one-shot inference (fake) (PASS) |
 | 64 | `mvctl install` | local | 0 | 121 B | [64-install.png](64-install.png) | self-install preview (PASS) |
 | 65 | `mvctl uninstall` | local | 0 | 87 B | [65-uninstall.png](65-uninstall.png) | uninstall preview (PASS) |

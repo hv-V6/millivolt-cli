@@ -4,6 +4,24 @@ All notable changes to `mvctl` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-11-05
+
+### Security
+
+- `dashboard` now issues a one-time random URL secret and an `HttpOnly`,
+  `SameSite=Strict` cookie. A `Host` header alone was not an auth boundary: any
+  local process could previously reach the token-injecting proxy. Requests
+  without the session cookie are refused, and the secret is dropped from the
+  address bar via a redirect.
+- The dashboard listener now reports a bind failure instead of silently
+  claiming success, and the browser launcher is reaped instead of left as a
+  zombie.
+
+### Added
+
+- `TestDashboardAuthGate` covers unauthenticated access, secret exchange,
+  authenticated asset requests and forged cookies.
+
 ## [0.1.0] - 2026-11-05
 
 First public release.

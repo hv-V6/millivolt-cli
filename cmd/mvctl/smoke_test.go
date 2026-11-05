@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -136,6 +137,81 @@ func TestSmokeEndToEnd(t *testing.T) {
 		if strings.Contains(out, "test-secret-value") {
 			t.Fatalf("%v: token leaked", tc.args)
 		}
+	}
+}
+
+func TestDashboardAuthGate(t *testing.T) {
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Frame-Options", "DENY")
+		_, _ = io.WriteString(w, "dashboard")
+	}))
+	defer upstream.Close()
+
+	const secret = "one-time-secret-value"
+	addr := "127.0.0.1:18472"
+	handler, err := dashboardHandler(addr, 18472, secret, "operator-token", upstream.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	front := httptest.NewServer(handler)
+	defer front.Close()
+
+	// No secret, no cookie: forbidden (Host check alone is not auth).
+	plain, err := http.Get(front.URL + "/")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_ = plain.Body.Close()
+	if plain.StatusCode != http.StatusForbidden {
+		t.Fatalf("unauthenticated request was allowed: %d", plain.StatusCode)
+	}
+
+	// Correct one-time secret: sets an HttpOnly cookie and redirects.
+	client := &http.Client{CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
+	exchange, _ := http.NewRequest(http.MethodGet, front.URL+"/?mvctl="+secret, nil)
+	exchange.Host = addr
+	first, err := client.Do(exchange)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_ = first.Body.Close()
+	if first.StatusCode != http.StatusFound {
+		t.Fatalf("secret exchange did not redirect: %d", first.StatusCode)
+	}
+	var cookie *http.Cookie
+	for _, c := range first.Cookies() {
+		if c.Name == "mvctl_dashboard" {
+			cookie = c
+		}
+	}
+	if cookie == nil || !cookie.HttpOnly || cookie.Value != secret {
+		t.Fatalf("missing HttpOnly session cookie: %+v", first.Cookies())
+	}
+
+	// The cookie alone grants access to same-origin dashboard assets.
+	req, _ := http.NewRequest(http.MethodGet, front.URL+"/dash/app.js", nil)
+	req.AddCookie(cookie)
+	req.Host = addr
+	ok, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_ = ok.Body.Close()
+	if ok.StatusCode != http.StatusOK {
+		t.Fatalf("authenticated asset request failed: %d", ok.StatusCode)
+	}
+
+	// A forged cookie is rejected.
+	bad, _ := http.NewRequest(http.MethodGet, front.URL+"/", nil)
+	bad.AddCookie(&http.Cookie{Name: "mvctl_dashboard", Value: "forged"})
+	bad.Host = addr
+	resp, err := client.Do(bad)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_ = resp.Body.Close()
+	if resp.StatusCode != http.StatusForbidden {
+		t.Fatalf("forged cookie was allowed: %d", resp.StatusCode)
 	}
 }
 
