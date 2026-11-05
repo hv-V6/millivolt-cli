@@ -54,7 +54,7 @@
     "command": "mvctl requests 10",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 1056,
+    "output_bytes": 1221,
     "png": "06-requests.png",
     "note": "durable request log",
     "verified": true
@@ -74,7 +74,7 @@
     "command": "mvctl prometheus",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 1574,
+    "output_bytes": 1575,
     "png": "08-prometheus.png",
     "note": "Prometheus exposition",
     "verified": true
@@ -274,7 +274,7 @@
     "command": "mvctl backup --out BACKUP_FILE",
     "mode": "fake",
     "exit_code": 0,
-    "output_bytes": 103,
+    "output_bytes": 104,
     "png": "28-backup.png",
     "note": "archive download (fake)",
     "verified": true
@@ -474,7 +474,7 @@
     "command": "mvctl adopt --dir SCRATCH_DIR --port 8471",
     "mode": "scratch",
     "exit_code": 0,
-    "output_bytes": 185,
+    "output_bytes": 186,
     "png": "48-adopt.png",
     "note": "record deployment (isolated state)",
     "verified": true
@@ -564,7 +564,7 @@
     "command": "mvctl top --no-tty --theme instrument --mode black",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 7040,
+    "output_bytes": 7006,
     "png": "57-top-live.png",
     "note": "TUI with real data",
     "verified": true
@@ -584,7 +584,7 @@
     "command": "mvctl tour --no-delay",
     "mode": "live",
     "exit_code": 0,
-    "output_bytes": 6137,
+    "output_bytes": 6302,
     "png": "59-tour.png",
     "note": "scripted walkthrough",
     "verified": true

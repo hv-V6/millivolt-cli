@@ -1,47 +1,85 @@
-# mvctl
+<p align="center">
+  <img src="assets/banner.png" alt="mvctl — control, inspect and show off millivolt" width="100%">
+</p>
 
-> Control, inspect and show off a [millivolt](https://github.com/LLM-4-People/millivolt)
-> inference proxy from a single Go binary.
+<p align="center">
+  <a href="https://github.com/hv-V6/millivolt-cli/releases"><img src="https://img.shields.io/github/v/release/hv-V6/millivolt-cli?style=flat-square&color=7aa0ff&label=release" alt="Release"></a>
+  <a href="https://github.com/hv-V6/millivolt-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-38d5c0?style=flat-square" alt="MIT"></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-1.27.2-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go 1.27.2"></a>
+  <a href="https://github.com/hv-V6/millivolt-cli/actions"><img src="https://img.shields.io/badge/deps-0%20runtime-2fd186?style=flat-square" alt="Zero runtime dependencies"></a>
+  <a href="https://github.com/LLM-4-People/millivolt/pull/66"><img src="https://img.shields.io/badge/upstream-PR%20%2366-ff6600?style=flat-square" alt="Upstream PR"></a>
+  <a href="screenshots/index.md"><img src="https://img.shields.io/badge/verified-74%20commands-b18cff?style=flat-square" alt="74 verified commands"></a>
+</p>
 
-`mvctl` is a standalone, zero-dependency CLI for millivolt. It reads live AI
-traffic, drives the operator plane, manages the Docker deployment, and renders a
-full-screen terminal dashboard using millivolt's own theme palettes.
+<p align="center">
+  <b>One binary. Zero dependencies. Every millivolt control, view and dashboard in your terminal.</b>
+</p>
 
-It has **no runtime dependencies**: no Node, no Python, no shell scripts, no
-package manager. Just one statically linked Go binary.
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#quickstart">Quickstart</a> ·
+  <a href="#see-it-in-action">Screenshots</a> ·
+  <a href="#themes">Themes</a> ·
+  <a href="#commands">Commands</a> ·
+  <a href="#safety">Safety</a> ·
+  <a href="#upstream">Upstream PR</a>
+</p>
 
-- **Control** — config, pause holds, provider throttles, quota gates, queue
-  draining, debug capture, purge, backup/restore, restart.
-- **View** — KPIs, retained request log, SQL queries, charts, cost attribution,
-  model/provider leaderboards, Prometheus exposition, health diagnostics.
-- **Show off** — a live TUI, 8 upstream themes × 2 modes, a traffic generator,
-  a load benchmark, a scripted tour and a token-free dashboard proxy.
+---
 
-A deliberately small subset of this tool (`cmd/mvctl`, HTTP-only, no Docker, no
-TUI) is also proposed upstream as a human counterpart to millivolt's MCP tools:
-[LLM-4-People/millivolt PR](https://github.com/LLM-4-People/millivolt/pulls).
+## Why mvctl
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+**🎛️ Control**
+
+Drive the whole operator plane: config, pause holds, provider throttles, quota
+gates, queue draining, debug capture, purge, backup/restore and graceful
+restart. `config set` uses the server's `revision` for optimistic concurrency.
+
+</td>
+<td width="33%" valign="top">
+
+**📊 Observe**
+
+KPIs, retained request log, bounded SQL, ASCII charts, spend attribution,
+model/provider leaderboards, Prometheus exposition and an 8-point diagnostic.
+Everything has a `--json` mode for scripts.
+
+</td>
+<td width="33%" valign="top">
+
+**✨ Show off**
+
+A live full-screen TUI with millivolt's own 8 palettes in 2 modes, a traffic
+generator, a load benchmark, a scripted tour and a token-free dashboard proxy.
+
+</td>
+</tr>
+</table>
+
+> Auto-discovery means `mvctl status` just works: it finds a running millivolt
+> from Docker Compose labels, a loopback `/healthz` probe and a bounded
+> compose-file scan, then reads the operator credential from the deployment's
+> own `.env`.
 
 ---
 
 ## Install
 
-### Prebuilt binaries
+<table>
+<tr><th width="33%">Prebuilt binary</th><th width="33%">From source</th><th width="33%">Self-install</th></tr>
+<tr valign="top"><td>
 
-Download the archive for your platform from the
-[Releases](https://github.com/hv-V6/millivolt-cli/releases) page, extract it,
-and put `mvctl` (or `mvctl.exe`) on your `PATH`.
+Download the archive for your platform from
+[Releases](https://github.com/hv-V6/millivolt-cli/releases) and put `mvctl` on
+your `PATH`.
 
-| Platform | Asset |
-| --- | --- |
-| Windows x86-64 | `mvctl-windows-amd64.zip` |
-| Linux x86-64 | `mvctl-linux-amd64.tar.gz` |
-| Linux ARM64 | `mvctl-linux-arm64.tar.gz` |
-| macOS x86-64 | `mvctl-darwin-amd64.tar.gz` |
-| macOS ARM64 | `mvctl-darwin-arm64.tar.gz` |
+Windows · Linux (amd64/arm64) · macOS (amd64/arm64)
 
-### From source
-
-Go 1.27.2 or newer:
+</td><td>
 
 ```sh
 git clone https://github.com/hv-V6/millivolt-cli.git
@@ -49,51 +87,107 @@ cd millivolt-cli
 go build -o mvctl ./cmd/mvctl
 ```
 
-### Self-install
+Requires Go 1.27.2+.
 
-Once you have the binary, it can install itself onto your `PATH`:
+</td><td>
 
 ```sh
-mvctl install          # preview: shows the target and PATH status
-mvctl install --yes    # copies itself into ~/.local/bin (or --dir PATH)
-mvctl status
-mvctl uninstall --yes  # remove the installed copy
+mvctl install          # preview
+mvctl install --yes    # copies itself to ~/.local/bin
+mvctl uninstall --yes
 ```
 
-`install` reports whether the target directory is on your `PATH` and prints the
-directory to add if it is not. It is pure Go — no shim, no `.cmd` wrapper, no
-shell script. Re-running it is idempotent (detected by content hash).
+Pure Go: no shim, no `.cmd`, no package manager.
+
+</td></tr>
+</table>
 
 ---
 
 ## Quickstart
 
-`mvctl` auto-discovers a running millivolt on first use: Docker Compose labels,
-then a loopback `/healthz` probe, then a bounded compose-file scan. It reads the
-operator credential from the deployment's own `.env`. **Nothing needs configuring
-by hand.**
-
 ```sh
-mvctl status                 # health, URL, version, headline metrics
-mvctl overview               # full KPI / storage / operator state
-mvctl requests 20            # recent proxied requests
-mvctl top                    # live full-screen dashboard
+mvctl status                    # auto-discovers the running proxy
+mvctl overview                  # full KPI / storage / operator state
+mvctl requests 20               # recent proxied requests
+mvctl top                       # live full-screen dashboard
 ```
 
-Point it at a specific instance when needed:
+Point it anywhere when needed:
 
 ```sh
 mvctl --url http://127.0.0.1:8471 status
-export MILLIVOLT_OPERATOR_TOKEN=...   # or --token / a profile / deployment .env
+export MILLIVOLT_OPERATOR_TOKEN=...     # or --token / a profile / deployment .env
+mvctl --json status | jq '.kpi.cost'
 ```
 
-Everything supports `--json` for scripting and honours `--no-color` / `NO_COLOR`.
+Everything supports `--json`, honours `--no-color` / `NO_COLOR`, and accepts
+`--` to end flag parsing.
+
+---
+
+## See it in action
+
+<p align="center">
+  <img src="assets/gallery.png" alt="Six real mvctl command outputs" width="100%">
+</p>
+
+<p align="center"><sub>Real ANSI output rendered as PNG by the pure-Go tool in <code>tools/screenshots</code>. <a href="screenshots/index.md">All 74 screenshots →</a></sub></p>
+
+The live dashboard against real proxy data, and the synthetic demo feed:
+
+<table>
+<tr>
+<td width="50%" align="center">
+<img src="screenshots/57-top-live.png" alt="mvctl top with live data" width="100%"><br>
+<sub><code>mvctl top --no-tty --theme instrument --mode black</code></sub>
+</td>
+<td width="50%" align="center">
+<img src="screenshots/58-top-demo.png" alt="mvctl top demo" width="100%"><br>
+<sub><code>mvctl top --demo --no-tty --theme midnight --mode black</code></sub>
+</td>
+</tr>
+</table>
+
+`top --demo` writes **nothing** to millivolt, so it is safe for screenshots,
+GIFs and recordings. When stdout is not a TTY, `top` prints one static frame
+instead of entering the alternate screen.
+
+---
+
+## Themes
+
+<p align="center">
+  <img src="assets/themes.png" alt="All eight millivolt palettes" width="100%">
+</p>
+
+`top` ships millivolt's own palette registry as its baseline, derived from
+`internal/web/static/css/themes.css` and `static/js/theme.js`. Every surface,
+accent, ink and semantic status token is applied to the header, KPI tiles,
+sparkline, provider bars, request table and badges.
+
+| id | hint | id | hint |
+| --- | --- | --- | --- |
+| `instrument` *(default)* | Warm graphite, blue and violet | `forest` | Moss, emerald and lime |
+| `slate` | Cool stone, lilac and sand | `rose` | Plum, pink and lilac |
+| `midnight` | Deep navy, sky and periwinkle | `ember` | Charcoal, orange and orchid |
+| `nord` | Arctic slate, frost and heather | `contrast` | Maximum separation |
+
+Each palette has a `black` and a `clear` mode:
+
+```sh
+mvctl themes list
+mvctl themes preview --theme nord --mode clear
+mvctl top --theme midnight --mode black      # t cycles themes, m cycles modes
+mvctl --theme rose --mode clear top --demo
+```
 
 ---
 
 ## Commands
 
-Run `mvctl help` for the live list.
+<details>
+<summary><b>Full command reference</b> — click to expand</summary>
 
 | Group | Commands |
 | --- | --- |
@@ -104,108 +198,62 @@ Run `mvctl help` for the live list.
 
 Global flags: `--json`, `--no-color` / `--color`, `--yes`, `--url`, `--token`,
 `--timeout`, `--profile`, `--theme`, `--mode`, `--dir`, `--port`, `--verbose`,
-`--version`, `--help`. `--` ends flag parsing; `--flag=false` (or `=0`, `=no`,
-`=off`) disables a boolean flag.
-
-### Examples
+`--version`, `--help`. `--flag=false` (or `=0`, `=no`, `=off`) disables a
+boolean flag; `--` ends flag parsing.
 
 ```sh
 mvctl chart --metric cost
 mvctl explore --by provider --limit 8
 mvctl cost --by model
-mvctl doctor                         # 8-point read-only diagnostic
-mvctl --json status | jq .kpi.cost
-
+mvctl doctor                                  # 8-point read-only diagnostic
 mvctl config keys listen
 mvctl config set history_size=10000 --yes
 mvctl pause on --yes
 mvctl throttle set --provider openrouter --concurrency 8 --yes
 mvctl purge --client mvctl-demo --yes
 mvctl backup --out backup.mvb
-mvctl restore --file backup.mvb      # inspect only; add --yes to apply
+mvctl restore --file backup.mvb              # inspect only; --yes to apply
+mvctl demo --yes && mvctl bench --yes
+mvctl tour --no-delay
 ```
 
-### Safety
+### Showcase commands
 
-Every state-changing command is explicit: without `--yes` it prints a preview
-and performs no request. This covers `config set|reload`, `pause on|off`,
-`throttle set|clear`, `quota resume`, `drain`, `debug on|off`, `restart`,
-`setup`, `revert`, `resume`, `update`, `start`, `stop`, `up`, `repair`, `adopt`,
-`profiles add|remove|use`, `demo`, `bench` and `chat`.
+| Command | What it does |
+| --- | --- |
+| `mvctl top` | Live dashboard: KPI tiles, sparkline, provider bars, coloured request log, keybindings (`q`, `p`, `d`, `r`, `t`, `m`, `?`) |
+| `mvctl demo --yes` | In-process OpenAI-compatible mock upstream + labelled traffic through millivolt |
+| `mvctl bench --yes` | Concurrent load test with p50/p95/p99 latency |
+| `mvctl chat "hello" --upstream URL --yes` | One-shot request with the correct `X-Proxy-*` headers |
+| `mvctl tour` | Scripted status → overview → requests → chart → explore walkthrough |
+| `mvctl dashboard` | Loopback proxy that injects the credential and strips frame headers, then opens the browser |
 
-Additional protections:
+</details>
 
-- `purge` previews with `/admin/purge/count`; an unfiltered purge also requires
+---
+
+## Safety
+
+- **Every state-changing command requires `--yes`**; without it, it prints a
+  preview and performs no request.
+- `purge` previews with `/admin/purge/count`; an unfiltered purge also needs
   `--all`.
-- `backup` refuses to overwrite an existing file without `--overwrite=true` and
-  streams large archives to a temp file (a truncated archive is an error, not a
-  corrupt "success").
-- `config set` uses the server's `revision` for optimistic concurrency (409 on
-  a stale write).
 - `--json` redacts credential-looking fields **inside typed structs and typed
-  maps**, and error bodies are scrubbed of the operator token.
-- `discover` reports only `has_token`, never a token value.
-- Docker is invoked with argv arrays (never a shell), bounded by timeouts and
-  capped output, with `WaitDelay` so a hung child cannot block forever.
+  maps**; error bodies are scrubbed of the operator token; `discover` emits
+  `has_token` only.
+- `backup` refuses to overwrite without `--overwrite=true` and streams large
+  archives to an `fsync`ed temp file — a truncated archive is an error, not a
+  corrupt "success".
+- `dashboard` uses a one-time URL secret exchanged for an `HttpOnly`,
+  `SameSite=Strict` cookie; a `Host` header alone is not an auth boundary.
+- Config/state writes are atomic, locked and `0600`; corrupt files are reported
+  rather than silently reset.
+- Docker is invoked with argv arrays (never a shell), bounded by timeouts,
+  capped output and `WaitDelay`.
 
----
-
-## Themes
-
-`top` ships millivolt's own palette registry as its baseline, derived from
-`internal/web/static/css/themes.css` and `static/js/theme.js`:
-
-| id | hint | id | hint |
-| --- | --- | --- | --- |
-| `instrument` (default) | Warm graphite, blue and violet | `forest` | Moss, emerald and lime |
-| `slate` | Cool stone, lilac and sand | `rose` | Plum, pink and lilac |
-| `midnight` | Deep navy, sky and periwinkle | `ember` | Charcoal, orange and orchid |
-| `nord` | Arctic slate, frost and heather | `contrast` | Maximum separation |
-
-Each palette has a `black` and a `clear` mode. The TUI uses the real surface,
-accent, ink and semantic status tokens for the header, KPI tiles, sparkline,
-provider bars, request table and badges.
-
-```sh
-mvctl themes list
-mvctl themes preview --theme nord --mode clear
-mvctl top --theme midnight --mode black
-mvctl --theme instrument --mode clear top --demo
-```
-
-`top --demo` runs a synthetic feed that writes **nothing** to millivolt, so it
-is safe for screenshots and recordings. When stdout is not a TTY, `top` prints
-one static frame instead of entering the alternate screen.
-
----
-
-## Showing it off
-
-- **`mvctl top`** — live dashboard: KPI tiles, a requests/sample sparkline,
-  provider bars, a colour-coded request log, badges, and keybindings
-  (`q` quit, `p` pause, `d` debug, `r` refresh, `t` theme, `m` mode, `?` help).
-- **`mvctl demo --yes`** — starts an in-process OpenAI-compatible mock upstream
-  and sends labelled traffic (`X-Proxy-Client: mvctl-demo`) through millivolt.
-  Clean up with `mvctl purge --client mvctl-demo --yes`.
-- **`mvctl bench --yes`** — concurrent load test with p50/p95/p99 latency.
-- **`mvctl chat "hello" --upstream URL --yes`** — one-shot request through the
-  proxy with the correct `X-Proxy-*` headers.
-- **`mvctl tour`** — scripted status → overview → requests → chart → explore
-  walkthrough for a recording.
-- **`mvctl dashboard`** — loopback proxy that injects the operator credential
-  and strips frame-blocking headers, then opens the real millivolt dashboard.
-  No token pasting.
-
-If the mock upstream is unreachable from inside Docker, pass
-`--upstream http://host.docker.internal:<port>/v1`, or use `top --demo`.
-
-### Verification screenshots
-
-[`screenshots/index.md`](screenshots/index.md) contains a PNG of every command's
-real output (74 images), generated by the pure-Go tool in
-[`tools/screenshots`](tools/screenshots). Read-only commands were captured
-against a live proxy; mutating commands against an in-process fake millivolt;
-Docker lifecycle commands against a throwaway no-op compose project.
+> On Windows, Unix permission bits are ignored by NTFS. `config.json`,
+> `state.json` and a deployment `.env` can contain the operator token — keep
+> the containing directory private to your user account.
 
 ---
 
@@ -217,18 +265,10 @@ mvctl profiles use --name prod --yes
 mvctl --profile prod status
 ```
 
-Config and state live in the per-user config directory (`config.json`,
-`state.json`) with atomic `fsync` writes and a lock file. Named profiles keep
-their own URL, directory, token, port and theme. Precedence is
-**flags → environment → profile → state → deployment `.env` → defaults**.
-
-Environment variables: `MILLIVOLT_URL`, `MILLIVOLT_OPERATOR_TOKEN`,
+Precedence: **flags → environment → profile → state → deployment `.env` →
+defaults**. Environment: `MILLIVOLT_URL`, `MILLIVOLT_OPERATOR_TOKEN`,
 `MILLIVOLT_PORT`, `MVCTL_PORT`, `MVCTL_PROFILE`, `MVCTL_THEME`, `MVCTL_MODE`,
 `NO_COLOR`, `MVCTL_NO_COLOR`.
-
-> On Windows, Unix permission bits are ignored by NTFS; `config.json`,
-> `state.json` and a deployment `.env` can contain the operator token, so keep
-> the containing directory private to your user account.
 
 ---
 
@@ -252,12 +292,13 @@ internal/
   themes/             8 millivolt palettes x 2 modes
   tui/                ANSI renderer, dashboard, raw terminal (build-tagged)
   demo/               mock upstream and traffic generator
-tools/screenshots/    Go-only PNG screenshot generator
+assets/               README presentation images (Go-generated)
+screenshots/          74 PNG command verifications + index
+tools/screenshots/    Go-only PNG screenshot + asset generator
 ```
 
 The five files `model.go`, `client.go`, `format.go`, `core.go`, `core_test.go`
-are **copied verbatim** into the upstream contribution. The standalone build
-adds everything else on top of that shared core.
+are copied **verbatim** into the upstream contribution.
 
 ---
 
@@ -268,24 +309,41 @@ go test ./...            # unit + in-process HTTP smoke tests
 go test -race ./...      # race detector
 go vet ./...
 gofmt -l cmd internal
-go build ./cmd/mvctl
 ```
 
 No test needs a live Docker daemon or network access. Regenerate the
-verification screenshots with `tools/screenshots` (see its `go.mod`).
+verification screenshots and README art with:
+
+```sh
+cd tools/screenshots && go run . \
+  -out ../../screenshots -assets ../../assets -assets-only
+```
 
 ---
 
+## Upstream
+
+A deliberately small subset of this tool is proposed upstream as
+**[LLM-4-People/millivolt#66](https://github.com/LLM-4-People/millivolt/pull/66)**:
+`cmd/mvctl` plus `docs/cli.md`, HTTP-only, standard library only, no Docker, no
+TUI. It is a human counterpart to the 22 MCP tools over the same
+`/admin/*` and `/metrics/*` operator plane — no new endpoints, no new
+dependencies, no runtime changes.
+
 ## Related
 
-- [millivolt](https://github.com/LLM-4-People/millivolt) — the inference proxy.
+- [millivolt](https://github.com/LLM-4-People/millivolt) — the inference proxy
 - [bb-plugin-millivolt](https://github.com/hv-V6/bb-plugin-millivolt) — the bb
-  sidebar plugin whose provisioning logic this tool ports to Go.
-- Upstream proposal: `cmd/mvctl` — a thin human client over millivolt's
-  existing `/admin/*` and `/metrics/*` operator plane, sibling to the 22 MCP
-  tools. No new endpoints, no new dependencies, no container management.
+  sidebar plugin whose provisioning logic this tool ports to Go
+- [Changelog](CHANGELOG.md) · [Agent skill](SKILL.md) · [Screenshots](screenshots/index.md)
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Palette values are derived from millivolt's
-MIT-licensed `themes.css`.
+[MIT](LICENSE). Palette values derived from millivolt's MIT-licensed
+`themes.css`.
+
+---
+
+<p align="center">
+  <sub>Built with Go · No runtime dependencies · 8 themes · 74 verified commands</sub>
+</p>

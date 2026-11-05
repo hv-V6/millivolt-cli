@@ -4,6 +4,15 @@ All notable changes to `mvctl` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Documentation
+
+- Rebuilt the README with a generated banner, an 8-palette theme matrix and a
+  six-command gallery, all composed in Go by `tools/screenshots -assets-only`.
+  Added badges, feature cards, a collapsible command reference and embedded
+  screenshots.
+
 ## [0.1.1] - 2026-11-05
 
 ### Security

@@ -507,16 +507,30 @@ func main() {
 	fontPath := flag.String("font", "", "monospace TTF (auto-detected when empty)")
 	liveURL := flag.String("live", envOr("MILLIVOLT_URL", "http://127.0.0.1:8080"), "live millivolt URL")
 	realDir := flag.String("realdir", os.Getenv("MVCTL_DEPLOY_DIR"), "real deployment dir")
+	assetsDir := flag.String("assets", "", "generate README presentation images into this dir (empty = skip)")
+	assetsOnly := flag.Bool("assets-only", false, "skip command screenshots and only regenerate README assets")
 	flag.Parse()
+
+	if *fontPath == "" {
+		*fontPath = findFont()
+	}
+	// Asset-only regeneration needs no mvctl binary, no Docker and no token.
+	if *assetsOnly {
+		if *assetsDir == "" {
+			fatal(fmt.Errorf("-assets-only requires -assets DIR"))
+		}
+		if err := generateAssets(*outDir, *assetsDir, *fontPath); err != nil {
+			fatal(fmt.Errorf("generating README assets: %w", err))
+		}
+		fmt.Printf("README assets written to %s\n", *assetsDir)
+		return
+	}
 
 	resolvedBin, err := exec.LookPath(*binPath)
 	if err != nil {
 		fatal(fmt.Errorf("cannot find mvctl binary %q on PATH: %w", *binPath, err))
 	}
 	*binPath = resolvedBin
-	if *fontPath == "" {
-		*fontPath = findFont()
-	}
 	if *realDir == "" {
 		*realDir = "."
 	}
@@ -582,6 +596,12 @@ func main() {
 
 	if err := writeManifest(*outDir, results); err != nil {
 		fatal(err)
+	}
+	if *assetsDir != "" {
+		if err := generateAssets(*outDir, *assetsDir, *fontPath); err != nil {
+			fatal(fmt.Errorf("generating README assets: %w", err))
+		}
+		fmt.Printf("README assets written to %s\n", *assetsDir)
 	}
 	passed := 0
 	for _, r := range results {
