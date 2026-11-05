@@ -1,0 +1,23 @@
+# Built binaries (release assets are published separately)
+/mvctl
+/mvctl.exe
+/mvctl-*
+/screenshots.exe
+/tools/screenshots/screenshots.exe
+
+# Local runtime state
+*.part
+*.tmp
+.state.json
+config.json
+state.json
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# The screenshots themselves are committed as verification evidence, but any
+# generated scratch output is not.
+/screenshots/*.new

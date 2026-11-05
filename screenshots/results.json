@@ -1,0 +1,742 @@
+[
+  {
+    "name": "01-help",
+    "command": "mvctl help",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 4585,
+    "png": "01-help.png",
+    "note": "command catalogue",
+    "verified": true
+  },
+  {
+    "name": "02-version",
+    "command": "mvctl --version",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 37,
+    "png": "02-version.png",
+    "note": "version",
+    "verified": true
+  },
+  {
+    "name": "03-status",
+    "command": "mvctl status",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 411,
+    "png": "03-status.png",
+    "note": "live health + headline metrics",
+    "verified": true
+  },
+  {
+    "name": "04-status-json",
+    "command": "mvctl --json status",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1818,
+    "png": "04-status-json.png",
+    "note": "scripting output, redacted",
+    "verified": true
+  },
+  {
+    "name": "05-overview",
+    "command": "mvctl overview",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 644,
+    "png": "05-overview.png",
+    "note": "full KPI table",
+    "verified": true
+  },
+  {
+    "name": "06-requests",
+    "command": "mvctl requests 10",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1221,
+    "png": "06-requests.png",
+    "note": "durable request log",
+    "verified": true
+  },
+  {
+    "name": "07-query",
+    "command": "mvctl query SELECT 1",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 23,
+    "png": "07-query.png",
+    "note": "bounded SQL",
+    "verified": true
+  },
+  {
+    "name": "08-prometheus",
+    "command": "mvctl prometheus",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1575,
+    "png": "08-prometheus.png",
+    "note": "Prometheus exposition",
+    "verified": true
+  },
+  {
+    "name": "09-watch",
+    "command": "mvctl watch --samples 3 --interval 1",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 279,
+    "png": "09-watch.png",
+    "note": "live counter sampling",
+    "verified": true
+  },
+  {
+    "name": "10-url",
+    "command": "mvctl url",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 22,
+    "png": "10-url.png",
+    "note": "base URL",
+    "verified": true
+  },
+  {
+    "name": "11-health",
+    "command": "mvctl health",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 43,
+    "png": "11-health.png",
+    "note": "health gate",
+    "verified": true
+  },
+  {
+    "name": "12-config-get",
+    "command": "mvctl config get",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 4711,
+    "png": "12-config-get.png",
+    "note": "full live config",
+    "verified": true
+  },
+  {
+    "name": "13-config-keys",
+    "command": "mvctl config keys listen",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 7,
+    "png": "13-config-keys.png",
+    "note": "schema key search",
+    "verified": true
+  },
+  {
+    "name": "14-config-diff",
+    "command": "mvctl config diff",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 518,
+    "png": "14-config-diff.png",
+    "note": "config vs defaults",
+    "verified": true
+  },
+  {
+    "name": "15-config-set",
+    "command": "mvctl config set history_size=10000",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 104,
+    "png": "15-config-set.png",
+    "note": "revision-checked write (fake)",
+    "verified": true
+  },
+  {
+    "name": "16-config-reload",
+    "command": "mvctl config reload",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 68,
+    "png": "16-config-reload.png",
+    "note": "reload (fake)",
+    "verified": true
+  },
+  {
+    "name": "17-pause-show",
+    "command": "mvctl pause",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 817,
+    "png": "17-pause-show.png",
+    "note": "hold state",
+    "verified": true
+  },
+  {
+    "name": "18-pause-on",
+    "command": "mvctl pause on",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 88,
+    "png": "18-pause-on.png",
+    "note": "add hold (fake)",
+    "verified": true
+  },
+  {
+    "name": "19-throttle-show",
+    "command": "mvctl throttle",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 469,
+    "png": "19-throttle-show.png",
+    "note": "provider limits",
+    "verified": true
+  },
+  {
+    "name": "20-throttle-set",
+    "command": "mvctl throttle set --provider openrouter --concurrency 8",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 150,
+    "png": "20-throttle-set.png",
+    "note": "set limit (fake)",
+    "verified": true
+  },
+  {
+    "name": "21-quota-show",
+    "command": "mvctl quota",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 168,
+    "png": "21-quota-show.png",
+    "note": "storm/quota state",
+    "verified": true
+  },
+  {
+    "name": "22-quota-resume",
+    "command": "mvctl quota resume --provider openrouter",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 72,
+    "png": "22-quota-resume.png",
+    "note": "resume gate (fake)",
+    "verified": true
+  },
+  {
+    "name": "23-drain",
+    "command": "mvctl drain --all --yes",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 50,
+    "png": "23-drain.png",
+    "note": "drain queue (fake)",
+    "verified": true
+  },
+  {
+    "name": "24-debug-show",
+    "command": "mvctl debug",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 3637,
+    "png": "24-debug-show.png",
+    "note": "capture sessions",
+    "verified": true
+  },
+  {
+    "name": "25-debug-on",
+    "command": "mvctl debug on",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 77,
+    "png": "25-debug-on.png",
+    "note": "start capture (fake)",
+    "verified": true
+  },
+  {
+    "name": "26-purge-preview",
+    "command": "mvctl purge --client mvctl-demo",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 173,
+    "png": "26-purge-preview.png",
+    "note": "preview only, no deletion",
+    "verified": true
+  },
+  {
+    "name": "27-purge-apply",
+    "command": "mvctl purge --client mvctl-demo --yes",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 41,
+    "png": "27-purge-apply.png",
+    "note": "delete (fake)",
+    "verified": true
+  },
+  {
+    "name": "28-backup",
+    "command": "mvctl backup --out BACKUP_FILE",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 103,
+    "png": "28-backup.png",
+    "note": "archive download (fake)",
+    "verified": true
+  },
+  {
+    "name": "29-restore-inspect",
+    "command": "mvctl restore --file BACKUP_FILE",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 149,
+    "png": "29-restore-inspect.png",
+    "note": "inspect, no apply",
+    "verified": true
+  },
+  {
+    "name": "30-restart-preview",
+    "command": "mvctl restart",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 53,
+    "png": "30-restart-preview.png",
+    "note": "guarded preview",
+    "verified": true
+  },
+  {
+    "name": "31-restart-apply",
+    "command": "mvctl restart --yes",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 69,
+    "png": "31-restart-apply.png",
+    "note": "restart (fake)",
+    "verified": true
+  },
+  {
+    "name": "32-chart",
+    "command": "mvctl chart",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1202,
+    "png": "32-chart.png",
+    "note": "ASCII time series",
+    "verified": true
+  },
+  {
+    "name": "33-explore",
+    "command": "mvctl explore --by provider --limit 6",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1411,
+    "png": "33-explore.png",
+    "note": "ranked breakdown",
+    "verified": true
+  },
+  {
+    "name": "34-cost",
+    "command": "mvctl cost",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1264,
+    "png": "34-cost.png",
+    "note": "spend attribution",
+    "verified": true
+  },
+  {
+    "name": "35-models",
+    "command": "mvctl models",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1378,
+    "png": "35-models.png",
+    "note": "model leaderboard",
+    "verified": true
+  },
+  {
+    "name": "36-providers",
+    "command": "mvctl providers",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 1330,
+    "png": "36-providers.png",
+    "note": "provider health board",
+    "verified": true
+  },
+  {
+    "name": "37-trace",
+    "command": "mvctl trace a1",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 134,
+    "png": "37-trace.png",
+    "note": "single request detail",
+    "verified": true
+  },
+  {
+    "name": "38-themes-list",
+    "command": "mvctl themes list",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 746,
+    "png": "38-themes-list.png",
+    "note": "8 palettes x 2 modes",
+    "verified": true
+  },
+  {
+    "name": "39-wait",
+    "command": "mvctl wait --timeout 5s",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 39,
+    "png": "39-wait.png",
+    "note": "block until healthy",
+    "verified": true
+  },
+  {
+    "name": "40-profiles-list",
+    "command": "mvctl profiles list",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 164,
+    "png": "40-profiles-list.png",
+    "note": "named deployments",
+    "verified": true
+  },
+  {
+    "name": "41-profiles-add",
+    "command": "mvctl profiles add --name demo --url http://127.0.0.1:8471",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 28,
+    "png": "41-profiles-add.png",
+    "note": "add profile (isolated config)",
+    "verified": true
+  },
+  {
+    "name": "42-profiles-use",
+    "command": "mvctl profiles use --name demo",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 31,
+    "png": "42-profiles-use.png",
+    "note": "set default profile",
+    "verified": true
+  },
+  {
+    "name": "43-discover",
+    "command": "mvctl discover",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 429,
+    "png": "43-discover.png",
+    "note": "Docker label discovery",
+    "verified": true
+  },
+  {
+    "name": "44-doctor",
+    "command": "mvctl doctor",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 848,
+    "png": "44-doctor.png",
+    "note": "8-point diagnostic",
+    "verified": true
+  },
+  {
+    "name": "45-images",
+    "command": "mvctl images",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 233,
+    "png": "45-images.png",
+    "note": "image drift",
+    "verified": true
+  },
+  {
+    "name": "46-logs",
+    "command": "mvctl logs --dir REAL_DIR --tail 15",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 16385,
+    "png": "46-logs.png",
+    "note": "deployment logs",
+    "verified": true
+  },
+  {
+    "name": "47-setup-preview",
+    "command": "mvctl setup",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 79,
+    "png": "47-setup-preview.png",
+    "note": "guarded install preview",
+    "verified": true
+  },
+  {
+    "name": "48-adopt",
+    "command": "mvctl adopt --dir SCRATCH_DIR --port 8471",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 185,
+    "png": "48-adopt.png",
+    "note": "record deployment (isolated state)",
+    "verified": true
+  },
+  {
+    "name": "49-stop",
+    "command": "mvctl stop --dir SCRATCH_DIR",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 46,
+    "png": "49-stop.png",
+    "note": "stop (scratch project)",
+    "verified": true
+  },
+  {
+    "name": "50-start",
+    "command": "mvctl start --dir SCRATCH_DIR",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 17,
+    "png": "50-start.png",
+    "note": "start (scratch project)",
+    "verified": true
+  },
+  {
+    "name": "51-up",
+    "command": "mvctl up --dir SCRATCH_DIR",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 17,
+    "png": "51-up.png",
+    "note": "compose up (scratch)",
+    "verified": true
+  },
+  {
+    "name": "52-update",
+    "command": "mvctl update --dry-run --dir SCRATCH_DIR",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 28,
+    "png": "52-update.png",
+    "note": "dry-run update",
+    "verified": true
+  },
+  {
+    "name": "53-revert-preview",
+    "command": "mvctl revert",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 68,
+    "png": "53-revert-preview.png",
+    "note": "guarded rollback preview",
+    "verified": true
+  },
+  {
+    "name": "54-resume-preview",
+    "command": "mvctl resume",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 75,
+    "png": "54-resume-preview.png",
+    "note": "guarded resume preview",
+    "verified": true
+  },
+  {
+    "name": "55-repair",
+    "command": "mvctl repair --dir SCRATCH_DIR",
+    "mode": "scratch",
+    "exit_code": 0,
+    "output_bytes": 139,
+    "png": "55-repair.png",
+    "note": "diagnose + fix (scratch)",
+    "verified": true
+  },
+  {
+    "name": "56-serve",
+    "command": "mvctl serve",
+    "mode": "scratch",
+    "exit_code": 1,
+    "output_bytes": 106,
+    "png": "56-serve.png",
+    "note": "supervisor startup",
+    "verified": true
+  },
+  {
+    "name": "57-top-live",
+    "command": "mvctl top --no-tty --theme instrument --mode black",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 6988,
+    "png": "57-top-live.png",
+    "note": "TUI with real data",
+    "verified": true
+  },
+  {
+    "name": "58-top-demo",
+    "command": "mvctl top --demo --no-tty --theme midnight --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 5252,
+    "png": "58-top-demo.png",
+    "note": "TUI synthetic feed",
+    "verified": true
+  },
+  {
+    "name": "59-tour",
+    "command": "mvctl tour --no-delay",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 6302,
+    "png": "59-tour.png",
+    "note": "scripted walkthrough",
+    "verified": true
+  },
+  {
+    "name": "60-dashboard-print",
+    "command": "mvctl dashboard --print",
+    "mode": "live",
+    "exit_code": 0,
+    "output_bytes": 23,
+    "png": "60-dashboard-print.png",
+    "note": "dashboard proxy URL",
+    "verified": true
+  },
+  {
+    "name": "61-demo",
+    "command": "mvctl demo --requests 2 --yes --upstream http://127.0.0.1:1/v1",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 348,
+    "png": "61-demo.png",
+    "note": "showcase traffic (fake)",
+    "verified": true
+  },
+  {
+    "name": "62-bench",
+    "command": "mvctl bench --requests 4 --concurrency 2 --yes --upstream http://127.0.0.1:1/v1",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 355,
+    "png": "62-bench.png",
+    "note": "latency percentiles (fake)",
+    "verified": true
+  },
+  {
+    "name": "63-chat",
+    "command": "mvctl chat hello from mvctl --upstream http://127.0.0.1:1/v1",
+    "mode": "fake",
+    "exit_code": 0,
+    "output_bytes": 44,
+    "png": "63-chat.png",
+    "note": "one-shot inference (fake)",
+    "verified": true
+  },
+  {
+    "name": "64-install",
+    "command": "mvctl install",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 121,
+    "png": "64-install.png",
+    "note": "self-install preview",
+    "verified": true
+  },
+  {
+    "name": "65-uninstall",
+    "command": "mvctl uninstall",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 87,
+    "png": "65-uninstall.png",
+    "note": "uninstall preview",
+    "verified": true
+  },
+  {
+    "name": "66-theme-instrument",
+    "command": "mvctl themes preview --theme instrument --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1239,
+    "png": "66-theme-instrument.png",
+    "note": "palette instrument / black",
+    "verified": true
+  },
+  {
+    "name": "67-theme-slate",
+    "command": "mvctl themes preview --theme slate --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1219,
+    "png": "67-theme-slate.png",
+    "note": "palette slate / black",
+    "verified": true
+  },
+  {
+    "name": "68-theme-midnight",
+    "command": "mvctl themes preview --theme midnight --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1217,
+    "png": "68-theme-midnight.png",
+    "note": "palette midnight / black",
+    "verified": true
+  },
+  {
+    "name": "69-theme-nord",
+    "command": "mvctl themes preview --theme nord --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1216,
+    "png": "69-theme-nord.png",
+    "note": "palette nord / black",
+    "verified": true
+  },
+  {
+    "name": "70-theme-forest",
+    "command": "mvctl themes preview --theme forest --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1208,
+    "png": "70-theme-forest.png",
+    "note": "palette forest / black",
+    "verified": true
+  },
+  {
+    "name": "71-theme-rose",
+    "command": "mvctl themes preview --theme rose --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1215,
+    "png": "71-theme-rose.png",
+    "note": "palette rose / black",
+    "verified": true
+  },
+  {
+    "name": "72-theme-ember",
+    "command": "mvctl themes preview --theme ember --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1190,
+    "png": "72-theme-ember.png",
+    "note": "palette ember / black",
+    "verified": true
+  },
+  {
+    "name": "73-theme-contrast",
+    "command": "mvctl themes preview --theme contrast --mode black",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1211,
+    "png": "73-theme-contrast.png",
+    "note": "palette contrast / black",
+    "verified": true
+  },
+  {
+    "name": "74-theme-clear",
+    "command": "mvctl themes preview --theme rose --mode clear",
+    "mode": "local",
+    "exit_code": 0,
+    "output_bytes": 1190,
+    "png": "74-theme-clear.png",
+    "note": "palette rose / clear",
+    "verified": true
+  }
+]
